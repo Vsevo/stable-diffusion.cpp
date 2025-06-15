@@ -78,7 +78,8 @@ struct UpscalerGGML {
             esrgan_upscaler->compute(n_threads, in, &out);
         };
         int64_t t0 = ggml_time_ms();
-        sd_tiling(input_image_tensor, upscaled, esrgan_upscaler->scale, esrgan_upscaler->tile_size, 0.25f, on_tiling);
+        float tile_overlap_factor = 10.f / esrgan_upscaler->tile_size;
+        sd_tiling(input_image_tensor, upscaled, esrgan_upscaler->scale, esrgan_upscaler->tile_size, tile_overlap_factor, on_tiling);
         esrgan_upscaler->free_compute_buffer();
         ggml_tensor_clamp(upscaled, 0.f, 1.f);
         uint8_t* upscaled_data = sd_tensor_to_image(upscaled);
